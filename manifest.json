@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Sahibinden Fiyat Takipçisi",
+  "version": "2.0.0",
+  "description": "Sahibinden.com ilanlarının fiyat geçmişini otomatik takip edin. Favori gerektirmez!",
+
+  "permissions": [
+    "activeTab",
+    "storage",
+    "notifications",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "*://*.sahibinden.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.sahibinden.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Sahibinden Fiyat Takipçisi",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

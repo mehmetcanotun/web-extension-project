@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <title>Sahibinden Fiyat Takipçisi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --surface: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --green: #16a34a;
+      --red: #dc2626;
+    }
+
+    body {
+      width: 360px;
+      min-height: 480px;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 16px 18px 14px;
+      color: #fff;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-brand h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .header-brand span { font-size: 18px; }
+    .version {
+      font-size: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 2px 8px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Status pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-dot.active   { background: #4ade80; box-shadow: 0 0 0 2px rgba(74,222,128,0.3); }
+    .status-dot.standby  { background: #fbbf24; }
+    .status-dot.inactive { background: rgba(255,255,255,0.4); }
+
+    /* ── Main content ── */
+    .main { padding: 14px; }
+
+    /* Summary cards */
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .sum-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .sum-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+    }
+    .sum-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Section header */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .section-action {
+      font-size: 11px;
+      color: var(--primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .section-action:hover { text-decoration: underline; }
+
+    /* Product list */
+    .product-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .product-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+    }
+
+    .product-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .product-change {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+    .product-change.down { color: var(--green); background: #dcfce7; }
+    .product-change.up   { color: var(--red);   background: #fee2e2; }
+    .product-change.flat { color: var(--muted);  background: #f1f5f9; }
+
+    .product-date {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+    }
+    .empty-icon { font-size: 36px; margin-bottom: 10px; }
+    .empty h3 { font-size: 14px; color: var(--text); margin-bottom: 6px; }
+    .empty p  { font-size: 12px; line-height: 1.6; }
+
+    /* Action buttons */
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .btn {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .btn-ghost:hover { background: var(--border); }
+
+    /* Loading */
+    .loader {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-brand">
+      <span>📊</span>
+      <h1>Fiyat Takipçisi</h1>
+    </div>
+    <span class="version">v2.0</span>
+  </div>
+  <div class="status-pill" id="status-pill">
+    <div class="status-dot inactive" id="status-dot"></div>
+    <span id="status-text">Kontrol ediliyor…</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="summary">
+    <div class="sum-card">
+      <div class="sum-val" id="count-tracked">–</div>
+      <div class="sum-label">Takipte</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-val" id="count-dropped">–</div>
+      <div class="sum-label">Düşen</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-val" id="count-records">–</div>
+      <div class="sum-label">Kayıt</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="section-title">Takip Edilen İlanlar</span>
+    <button class="section-action" id="clear-btn">Tümünü Sil</button>
+  </div>
+
+  <div id="product-list" class="product-list">
+    <div class="loader">Yükleniyor…</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-ghost" id="export-btn">📥 CSV İndir</button>
+    <button class="btn btn-primary" id="open-btn">İlana Git</button>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Sahibinden Fiyat Takipçisi</span>
+  <span id="last-update"></span>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+/* Sahibinden Fiyat Takipçisi - Widget Stilleri v2.0 */
+
+#sft-widget {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 340px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px -1px rgba(0,0,0,0.10),
+    0 10px 32px -4px rgba(0,0,0,0.16),
+    0 0 0 1px rgba(0,0,0,0.06);
+  z-index: 2147483647;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1e293b;
+  animation: sft-slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  user-select: none;
+}
+
+@keyframes sft-slideIn {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);   opacity: 1; }
+}
+
+@keyframes sft-slideOut {
+  from { transform: translateX(0);   opacity: 1; }
+  to   { transform: translateX(110%); opacity: 0; }
+}
+
+/* ── Header ─────────────────────────────────── */
+
+.sft-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-radius: 12px 12px 0 0;
+  cursor: grab;
+}
+.sft-header:active { cursor: grabbing; }
+
+.sft-header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sft-icon { font-size: 15px; }
+
+.sft-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.sft-header-right {
+  display: flex;
+  gap: 4px;
+}
+
+.sft-btn-icon {
+  background: rgba(255,255,255,0.18);
+  border: none;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  padding: 0;
+}
+.sft-btn-icon:hover { background: rgba(255,255,255,0.30); }
+
+/* ── Body ───────────────────────────────────── */
+
+#sft-body {
+  padding: 14px;
+}
+
+/* Current price block */
+.sft-current {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sft-current-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.03em;
+}
+
+.sft-trend {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sft-trend-sub {
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+/* Stats row */
+.sft-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.sft-stat {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 8px;
+  text-align: center;
+}
+
+.sft-stat-label {
+  display: block;
+  font-size: 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.sft-stat-value {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.sft-stat-value.green { color: #16a34a; }
+.sft-stat-value.red   { color: #dc2626; }
+
+/* Chart */
+.sft-chart-wrap {
+  position: relative;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+#sft-canvas {
+  display: block;
+  width: 100%;
+  height: 120px;
+}
+
+.sft-chart-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #94a3b8;
+  background: #f8fafc;
+}
+
+/* History */
+.sft-history-head {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.sft-history {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.sft-history::-webkit-scrollbar { width: 4px; }
+.sft-history::-webkit-scrollbar-track { background: transparent; }
+.sft-history::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+.sft-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  transition: background 0.1s;
+}
+.sft-row:first-child {
+  background: #ede9fe;
+  border-color: #c4b5fd;
+}
+.sft-row:hover { background: #f1f5f9; }
+
+.sft-date {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.sft-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  #sft-widget {
+    width: calc(100vw - 32px);
+    right: 16px;
+    top: 16px;
+  }
+}
